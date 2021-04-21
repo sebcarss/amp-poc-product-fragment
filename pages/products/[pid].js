@@ -1,7 +1,8 @@
-import Title from '../../components/product/title'
-import Price from '../../components/price/price'
-import ImageGrid from '../../components/images/image-grid'
-import FullWidthImage from '../../components/images/full-width-image'
+import DefaultLayout from '../../components/layouts/default-layout'
+import Title from '../../components/modules/product/title'
+import Price from '../../components/modules/price/price'
+import ImageGrid from '../../components/modules/images/image-grid'
+import FullWidthImage from '../../components/modules/images/full-width-image'
 
 export default function Product({ product, layout }) {
     const { data: { id, attributes } } = product
@@ -9,15 +10,8 @@ export default function Product({ product, layout }) {
 
     // Return default layout if not found in Amplience
     if (layout === undefined) {
-
-        // TODO Create a DefaultLayout component and pass props in
-
         return (
-            <div>
-                <Title brand={brand.name} title={name} />
-                <Price price={price} />
-                <ImageGrid images={images} />
-            </div>
+            <DefaultLayout product={product} />
         )
     }
 
@@ -32,6 +26,8 @@ export default function Product({ product, layout }) {
             </div>
         )
     }
+
+    // TODO Merge these together using if statements to define the layouts
 
     return (
         <div>
