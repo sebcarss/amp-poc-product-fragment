@@ -1,12 +1,19 @@
-import Grid from '@material-ui/core/Grid'
+import FullWidthLayout from '../../components/fullWidthLayout'
 
-export default function Product({ data }) {
-    let nav = data.nav
-    let images = data.images
+export default function Product({ data, layout, layoutData }) {
+    const nav = data.nav
+    const images = data.images
+    const isFullWidthImage = layoutData.content.fullWidthImage
+
+    console.log(layout)
+    console.log({data})
+
+    if (isFullWidthImage) {
+        return <FullWidthLayout />
+    }
 
     // TODO Pass the data to the appropriate layout to render
 
-    console.log({data})
     return (
         <div>
                 {/* ID: {data.id} */}
@@ -33,7 +40,7 @@ export async function getServerSideProps({ params }) {
         "id": "1",
         "nav": {
             "department": "home_and_furniture",
-            "category": "sofas",
+            "category": "sofa",
             "subcategory": "corner_sofas",
         },
         "images": {
@@ -43,11 +50,21 @@ export async function getServerSideProps({ params }) {
         "title": "Hampshire Premium Leather Corner Group Sofa"
     }
 
-    return {
-        props: { data }
+    // TODO Call Amplience to get layout information
+
+    const layoutResponse = await fetch(`https://5w2mj9mrmyfl1ou62xbpqc88p.staging.bigcontent.io/content/key/pdpconfig/category/sofa?depth=all&format=inlined`)
+    const layoutData = await layoutResponse.json()
+
+    console.log(layoutData)
+
+    const layout = {
+        "fullWidthImage": false
     }
 
-    // TODO Call Amplience to get layout information
+    return {
+        props: { data, layout, layoutData }
+    }
+
 
     // const productId = params.pid
     // console.log(productId)

@@ -1,8 +1,10 @@
-export default function Layout({ children }) {
+export default function FullWidthLayout({ children }) {
+    console.log(children)
+
     return (
         <div>
-            Default Layout
-            <div>
+            Full Width Image Layout
+            {/* <div>
                 <img src={images.hero_image} alt="picture of awesome sofa"></img>
             </div>
 
@@ -12,7 +14,7 @@ export default function Layout({ children }) {
             <div>{data.price}</div>
             <div>
                 <button id="addToBasketButton">Add to Basket</button>
-            </div>
+            </div> */}
         </div>
     )
 }
