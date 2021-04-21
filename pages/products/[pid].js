@@ -1,4 +1,5 @@
 import Title from '../../components/product/title'
+import Price from '../../components/price/price'
 
 const ampImagePath = "https://media.very.co.uk/i/very/"
 const ampSmallImageTemplate = "?w=250&h=250&sm=TL"
@@ -18,7 +19,7 @@ export default function Product({ product, layout }) {
         return (
             <div>
                 <Title brand={brand.name} title={name} />
-                <div>£{price.current}</div>
+                <Price price={price} />
                 <div> 
                     { images.map(({ identifier }) => {
                         let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
@@ -42,7 +43,7 @@ export default function Product({ product, layout }) {
         return (
             <div>
                 <Title brand={brand.name} title={name} />
-                <div>£{price.current}</div>
+                <Price price={price} />
                 <div> 
                     <img src={heroImage} alt="picture of awesome product" />
                 </div>
@@ -53,7 +54,7 @@ export default function Product({ product, layout }) {
     return (
         <div>
             <Title brand={brand.name} title={name} />
-            <div>£{price.current}</div>
+            <Price price={price} />
             <div> 
                 { images.map(({ identifier }) => {
                     let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
@@ -78,7 +79,7 @@ export async function getServerSideProps({ params }) {
     const product = await productResponse.json()
     console.log(product);
 
-    if (!product || product.errors) {
+    if (!product || product.errors || product.error) {
         return {
             notFound: true,
         }
