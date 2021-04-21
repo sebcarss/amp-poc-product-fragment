@@ -1,15 +1,11 @@
 import Title from '../../components/product/title'
 import Price from '../../components/price/price'
-
-const ampImagePath = "https://media.very.co.uk/i/very/"
-const ampSmallImageTemplate = "?w=250&h=250&sm=TL"
-const ampWideImageTemplate = "?w=800&h=800&sm=TL&crop=0,350,1200,250"
+import ImageGrid from '../../components/images/image-grid'
+import FullWidthImage from '../../components/images/full-width-image'
 
 export default function Product({ product, layout }) {
     const { data: { id, attributes } } = product
     const { brand, name, images, price } = attributes;
-
-    // TODO Make modules out of the different sections so that they can be rearranged
 
     // Return default layout if not found in Amplience
     if (layout === undefined) {
@@ -20,33 +16,19 @@ export default function Product({ product, layout }) {
             <div>
                 <Title brand={brand.name} title={name} />
                 <Price price={price} />
-                <div> 
-                    { images.map(({ identifier }) => {
-                        let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
-                        console.log(imageUrl)
-                        return (
-                            <img src={imageUrl} alt="picture of awesome product" />
-                        )
-                    })}
-                </div>
+                <ImageGrid images={images} />
             </div>
         )
     }
 
+    // Get fullWidthImage config from Amplience PDP Config content
     const isFullWidthImage = layout.content.fullWidthImage
-
-    console.log(product.data)
-
     if (isFullWidthImage) {
-        let heroImage = `${ampImagePath}${images[0].identifier}${ampWideImageTemplate}`
-
         return (
             <div>
                 <Title brand={brand.name} title={name} />
                 <Price price={price} />
-                <div> 
-                    <img src={heroImage} alt="picture of awesome product" />
-                </div>
+                <FullWidthImage images={images} />
             </div>
         )
     }
@@ -55,15 +37,7 @@ export default function Product({ product, layout }) {
         <div>
             <Title brand={brand.name} title={name} />
             <Price price={price} />
-            <div> 
-                { images.map(({ identifier }) => {
-                    let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
-                    console.log(imageUrl)
-                    return (
-                        <img src={imageUrl} alt="picture of awesome product" />
-                    )
-                })}
-            </div>
+            <ImageGrid images={images} />
         </div>
     )
 }
@@ -109,28 +83,4 @@ export async function getServerSideProps({ params }) {
     return {
         props: { product, layout } // will be passed to the page component as props
     }
-
-    // TODO Call product API to get product data including nav categories
-
-    // const data = {
-    //     "id": "1",
-    //     "nav": {
-    //         "department": "home_and_furniture",
-    //         "category": "sofa",
-    //         "subcategory": "corner_sofas",
-    //     },
-    //     "images": {
-    //         "hero_image": "https://media.very.co.uk/i/very/MCTQN_SQ1_0000011520_VINTAGE_TAN_SLf",
-    //     },
-    //     "price": "£1499",
-    //     "title": "Hampshire Premium Leather Corner Group Sofa"
-    // }
-
-    // const layout = {
-    //     "fullWidthImage": false
-    // }
-
-    // return {
-    //     props: { data, layout, layoutData }
-    // }
 }
