@@ -13,7 +13,7 @@ function ImageGrid (props) {
                 let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
                 console.log(imageUrl)
                 return (
-                    <img src={imageUrl} alt="picture of awesome product" />
+                    <img key={identifier} src={imageUrl} alt="picture of awesome product" />
                 )
             })}
         </div>
