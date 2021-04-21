@@ -12,25 +12,23 @@ export default function Product({ product, layout }) {
         )
     }
 
+    // TODO Populate new layout object based off the Amplience PDP Config and PDP Layout 
+    // and use it to store the JSX version of the layout to be rendered in the return
+
     // Get fullWidthImage config from Amplience PDP Config content
     const isFullWidthImage = layout.content.fullWidthImage
+    var imageLayout
     if (isFullWidthImage) {
-        return (
-            <div>
-                <Title product={product} />
-                <Price product={product} />
-                <FullWidthImage product={product} />
-            </div>
-        )
+        imageLayout = <FullWidthImage product={product} />
+    } else {
+        imageLayout = <ImageGrid product={product} />
     }
-
-    // TODO Merge these together using if statements to define the layouts
 
     return (
         <div>
             <Title product={product} />
             <Price product={product} />
-            <ImageGrid product={product} />
+            {imageLayout}
         </div>
     )
 }
