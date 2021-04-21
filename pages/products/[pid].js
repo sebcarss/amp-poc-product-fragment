@@ -9,8 +9,13 @@ export default function Product({ product, layout }) {
     const { data: { id, attributes } } = product
     const { brand, name, images, price } = attributes;
 
+    // TODO Make modules out of the different sections so that they can be rearranged
+
     // Return default layout if not found in Amplience
     if (layout === undefined) {
+
+        // TODO Create a DefaultLayout component and pass props in
+
         return (
             <div>
                 <h1>{brand.name}</h1>
@@ -34,19 +39,16 @@ export default function Product({ product, layout }) {
     console.log(product.data)
 
     if (isFullWidthImage) {
+        let heroImage = `${ampImagePath}${images[0].identifier}${ampWideImageTemplate}`
+
         return (
             <div>
                 <h1>{brand.name}</h1>
                 <h2>{name}</h2>
                 <div>£{price.current}</div>
                 <div> 
-                    { images.map(({ identifier }) => {
-                        let imageUrl = `${ampImagePath}${identifier}${ampWideImageTemplate}`
-                        console.log(imageUrl)
-                        return (
-                            <img src={imageUrl} alt="picture of awesome sofa" />
-                        )
-                    })}
+                    
+                    <img src={heroImage} alt="picture of awesome sofa" />
                 </div>
             </div>
         )
