@@ -1,5 +1,4 @@
-import FullWidthLayout from '../../components/fullWidthLayout'
-import Layout from '../../components/layout'
+import Title from '../../components/product/title'
 
 const ampImagePath = "https://media.very.co.uk/i/very/"
 const ampSmallImageTemplate = "?w=250&h=250&sm=TL"
@@ -18,15 +17,14 @@ export default function Product({ product, layout }) {
 
         return (
             <div>
-                <h1>{brand.name}</h1>
-                <h2>{name}</h2>
+                <Title brand={brand.name} title={name} />
                 <div>£{price.current}</div>
                 <div> 
                     { images.map(({ identifier }) => {
                         let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
                         console.log(imageUrl)
                         return (
-                            <img src={imageUrl} alt="picture of awesome sofa" />
+                            <img src={imageUrl} alt="picture of awesome product" />
                         )
                     })}
                 </div>
@@ -43,12 +41,10 @@ export default function Product({ product, layout }) {
 
         return (
             <div>
-                <h1>{brand.name}</h1>
-                <h2>{name}</h2>
+                <Title brand={brand.name} title={name} />
                 <div>£{price.current}</div>
                 <div> 
-                    
-                    <img src={heroImage} alt="picture of awesome sofa" />
+                    <img src={heroImage} alt="picture of awesome product" />
                 </div>
             </div>
         )
@@ -56,15 +52,14 @@ export default function Product({ product, layout }) {
 
     return (
         <div>
-            <h1>{brand.name}</h1>
-            <h2>{name}</h2>
+            <Title brand={brand.name} title={name} />
             <div>£{price.current}</div>
             <div> 
                 { images.map(({ identifier }) => {
                     let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
                     console.log(imageUrl)
                     return (
-                        <img src={imageUrl} alt="picture of awesome sofa" />
+                        <img src={imageUrl} alt="picture of awesome product" />
                     )
                 })}
             </div>
