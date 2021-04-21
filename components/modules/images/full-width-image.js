@@ -5,7 +5,8 @@ const ampImagePath = "https://media.very.co.uk/i/very/"
 const ampWideImageTemplate = "?w=800&h=800&sm=TL&crop=0,350,1200,250"
 
 function FullWidthImage(props) {
-    let heroImage = `${ampImagePath}${props.images[0].identifier}${ampWideImageTemplate}`
+    const { data: { attributes: { images } } } = props.product
+    let heroImage = `${ampImagePath}${images[0].identifier}${ampWideImageTemplate}`
 
     return (
         <div>

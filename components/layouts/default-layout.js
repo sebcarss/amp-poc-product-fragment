@@ -8,9 +8,9 @@ function DefaultLayout(props) {
 
     return (
         <div>
-            <Title brand={brand.name} title={name} />
-            <Price price={price} />
-            <ImageGrid images={images} />
+            <Title product={props.product} />
+            <Price product={props.product} />
+            <ImageGrid product={props.product} />
         </div> 
     )
     

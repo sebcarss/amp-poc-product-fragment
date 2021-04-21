@@ -5,9 +5,6 @@ import ImageGrid from '../../components/modules/images/image-grid'
 import FullWidthImage from '../../components/modules/images/full-width-image'
 
 export default function Product({ product, layout }) {
-    const { data: { id, attributes } } = product
-    const { brand, name, images, price } = attributes;
-
     // Return default layout if not found in Amplience
     if (layout === undefined) {
         return (
@@ -20,9 +17,9 @@ export default function Product({ product, layout }) {
     if (isFullWidthImage) {
         return (
             <div>
-                <Title brand={brand.name} title={name} />
-                <Price price={price} />
-                <FullWidthImage images={images} />
+                <Title product={product} />
+                <Price product={product} />
+                <FullWidthImage product={product} />
             </div>
         )
     }
@@ -31,9 +28,9 @@ export default function Product({ product, layout }) {
 
     return (
         <div>
-            <Title brand={brand.name} title={name} />
-            <Price price={price} />
-            <ImageGrid images={images} />
+            <Title product={product} />
+            <Price product={product} />
+            <ImageGrid product={product} />
         </div>
     )
 }

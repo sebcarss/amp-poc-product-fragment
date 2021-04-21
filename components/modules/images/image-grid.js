@@ -5,9 +5,11 @@ const ampImagePath = "https://media.very.co.uk/i/very/"
 const ampSmallImageTemplate = "?w=250&h=250&sm=TL"
 
 function ImageGrid (props) {
+    const { data: { attributes: { images } } } = props.product
+
     return (
         <div>
-            { props.images.map(({ identifier }) => {
+            { images.map(({ identifier }) => {
                 let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
                 console.log(imageUrl)
                 return (

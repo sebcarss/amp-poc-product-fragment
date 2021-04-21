@@ -1,8 +1,10 @@
 function Title (props) {
+    const { data: { attributes: { brand, name} } } = props.product
+
     return (
         <div>
-            <h1>{props.brand}</h1>
-            <h2>{props.title}</h2>
+            <h1>{brand.name}</h1>
+            <h2>{name}</h2>
         </div>
     )
 }
