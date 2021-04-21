@@ -4,21 +4,33 @@ import Price from '../../components/modules/price/price'
 import ImageGrid from '../../components/modules/images/image-grid'
 import FullWidthImage from '../../components/modules/images/full-width-image'
 
-export default function Product({ product, layout }) {
+export default function Product({ product, pdpconfig }) {
     // Return default layout if not found in Amplience
-    if (layout === undefined) {
+    if (pdpconfig === undefined) {
         return (
             <DefaultLayout product={product} />
         )
     }
 
+    const { content: { config } } = pdpconfig
+    const { content: { layout : { layout } } } = pdpconfig
+    console.log(layout)
+    
     // TODO Populate new layout object based off the Amplience PDP Config and PDP Layout 
     // and use it to store the JSX version of the layout to be rendered in the return
+    
+    // {
+    //     children: [
+    //         { name: 'product_price' },
+    //         { name: 'product_name' },
+    //         { name: 'product_image' }
+    //     ]
+    // }
+      
 
     // Get fullWidthImage config from Amplience PDP Config content
-    const isFullWidthImage = layout.content.fullWidthImage
     var imageLayout
-    if (isFullWidthImage) {
+    if (config.fullWidthImage) {
         imageLayout = <FullWidthImage product={product} />
     } else {
         imageLayout = <ImageGrid product={product} />
@@ -63,17 +75,17 @@ export async function getServerSideProps({ params }) {
     console.log(category);
 
     // Fetch PDP Config and Layout from Amplience
-    const layoutResponse = await fetch(`https://5w2mj9mrmyfl1ou62xbpqc88p.staging.bigcontent.io/content/key/pdpconfig/category/${category}?depth=all&format=inlined`)
-    const layout = await layoutResponse.json()
-    console.log(layout)
+    const pdpconfigResponse = await fetch(`https://5w2mj9mrmyfl1ou62xbpqc88p.staging.bigcontent.io/content/key/pdpconfig/category/${category}?depth=all&format=inlined`)
+    const pdpconfig = await pdpconfigResponse.json()
+    console.log(pdpconfig)
 
-    if (layout.error != null) {
+    if (pdpconfig.error != null) {
         return {
             props: { product }
         }
     }
     
     return {
-        props: { product, layout } // will be passed to the page component as props
+        props: { product, pdpconfig } // will be passed to the page component as props
     }
 }
