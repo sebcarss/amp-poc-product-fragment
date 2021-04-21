@@ -77,11 +77,11 @@ export async function getServerSideProps({ params }) {
     console.log(productId)
 
     // Fetch product data from Selling Product Query
-    const productResponse = await fetch(`https://www.very.co.uk/api/selling-product/selling-products/${productId}?source=atg`)
+    const productResponse = await fetch(`https://amp-poc-selling-product.netlify.app/.netlify/functions/selling-product/${productId}`)
     const product = await productResponse.json()
     console.log(product);
 
-    if (!product) {
+    if (!product || product.errors) {
         return {
             notFound: true,
         }
