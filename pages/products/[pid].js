@@ -1,32 +1,70 @@
 import FullWidthLayout from '../../components/fullWidthLayout'
+import Layout from '../../components/layout'
 
-export default function Product({ data, layout, layoutData }) {
-    const nav = data.nav
-    const images = data.images
-    const isFullWidthImage = layoutData.content.fullWidthImage
+const ampImagePath = "https://media.very.co.uk/i/very/"
+const ampSmallImageTemplate = "?w=250&h=250&sm=TL"
+const ampWideImageTemplate = "?w=800&h=800&sm=TL&crop=0,350,1200,250"
 
-    console.log(layout)
-    console.log({data})
+export default function Product({ product, layout }) {
+    const { data: { id, attributes } } = product
+    const { brand, name, images, price } = attributes;
 
-    if (isFullWidthImage) {
-        return <FullWidthLayout />
+    // Return default layout if not found in Amplience
+    if (layout === undefined) {
+        return (
+            <div>
+                <h1>{brand.name}</h1>
+                <h2>{name}</h2>
+                <div>£{price.current}</div>
+                <div> 
+                    { images.map(({ identifier }) => {
+                        let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
+                        console.log(imageUrl)
+                        return (
+                            <img src={imageUrl} alt="picture of awesome sofa" />
+                        )
+                    })}
+                </div>
+            </div>
+        )
     }
 
-    // TODO Pass the data to the appropriate layout to render
+    const isFullWidthImage = layout.content.fullWidthImage
+
+    console.log(product.data)
+
+    if (isFullWidthImage) {
+        return (
+            <div>
+                <h1>{brand.name}</h1>
+                <h2>{name}</h2>
+                <div>£{price.current}</div>
+                <div> 
+                    { images.map(({ identifier }) => {
+                        let imageUrl = `${ampImagePath}${identifier}${ampWideImageTemplate}`
+                        console.log(imageUrl)
+                        return (
+                            <img src={imageUrl} alt="picture of awesome sofa" />
+                        )
+                    })}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
-                {/* ID: {data.id} */}
-            <div>
-                <img src={images.hero_image} alt="picture of awesome sofa"></img>
-            </div>
-
-            <h1 id="productTitle">
-                <span id="productName">{data.title}</span>
-            </h1>
-            <div>{data.price}</div>
-            <div>
-                <button id="addToBasketButton">Add to Basket</button>
+            <h1>{brand.name}</h1>
+            <h2>{name}</h2>
+            <div>£{price.current}</div>
+            <div> 
+                { images.map(({ identifier }) => {
+                    let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
+                    console.log(imageUrl)
+                    return (
+                        <img src={imageUrl} alt="picture of awesome sofa" />
+                    )
+                })}
             </div>
         </div>
     )
@@ -34,53 +72,67 @@ export default function Product({ data, layout, layoutData }) {
 
 export async function getServerSideProps({ params }) {
 
+    // Get id from request
+    const productId = params.pid
+    console.log(productId)
+
+    // Fetch product data from Selling Product Query
+    const productResponse = await fetch(`https://www.very.co.uk/api/selling-product/selling-products/${productId}?source=atg`)
+    const product = await productResponse.json()
+    console.log(product);
+
+    if (!product) {
+        return {
+            notFound: true,
+        }
+    }
+
+    // Get category from product data
+    let productCategory = 'default'
+    if (product.data.attributes.brand.name === 'Nike') {
+        productCategory = 'nike-trainers'
+    } else {
+        productCategory = 'sofa'
+    }
+    const category = productCategory;
+    console.log(category);
+
+    // Fetch PDP Config and Layout from Amplience
+    const layoutResponse = await fetch(`https://5w2mj9mrmyfl1ou62xbpqc88p.staging.bigcontent.io/content/key/pdpconfig/category/${category}?depth=all&format=inlined`)
+    const layout = await layoutResponse.json()
+    console.log(layout)
+
+    if (layout.error != null) {
+        return {
+            props: { product }
+        }
+    }
+    
+    return {
+        props: { product, layout } // will be passed to the page component as props
+    }
+
     // TODO Call product API to get product data including nav categories
 
-    const data = {
-        "id": "1",
-        "nav": {
-            "department": "home_and_furniture",
-            "category": "sofa",
-            "subcategory": "corner_sofas",
-        },
-        "images": {
-            "hero_image": "https://media.very.co.uk/i/very/MCTQN_SQ1_0000011520_VINTAGE_TAN_SLf?$550x733_standard$",
-        },
-        "price": "£1499",
-        "title": "Hampshire Premium Leather Corner Group Sofa"
-    }
-
-    // TODO Call Amplience to get layout information
-
-    const layoutResponse = await fetch(`https://5w2mj9mrmyfl1ou62xbpqc88p.staging.bigcontent.io/content/key/pdpconfig/category/sofa?depth=all&format=inlined`)
-    const layoutData = await layoutResponse.json()
-
-    console.log(layoutData)
-
-    const layout = {
-        "fullWidthImage": false
-    }
-
-    return {
-        props: { data, layout, layoutData }
-    }
-
-
-    // const productId = params.pid
-    // console.log(productId)
-
-    // const res = await fetch(`https://www.very.co.uk/api/selling-product/selling-products/${productId}?source=atg`)
-    // const data = await res.json()
-
-    // console.log(data);
-
-    // if (!data) {
-    //     return {
-    //         notFound: true,
-    //     }
+    // const data = {
+    //     "id": "1",
+    //     "nav": {
+    //         "department": "home_and_furniture",
+    //         "category": "sofa",
+    //         "subcategory": "corner_sofas",
+    //     },
+    //     "images": {
+    //         "hero_image": "https://media.very.co.uk/i/very/MCTQN_SQ1_0000011520_VINTAGE_TAN_SLf",
+    //     },
+    //     "price": "£1499",
+    //     "title": "Hampshire Premium Leather Corner Group Sofa"
     // }
-    
+
+    // const layout = {
+    //     "fullWidthImage": false
+    // }
+
     // return {
-    //     props: { data} // will be passed to the page component as props
+    //     props: { data, layout, layoutData }
     // }
 }

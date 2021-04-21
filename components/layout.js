@@ -1,18 +1,21 @@
-export default function Layout({ children }) {
+export default function Layout(props) {
+
     return (
         <div>
-            Default Layout
-            <div>
-                <img src={images.hero_image} alt="picture of awesome sofa"></img>
-            </div>
-
-            <h1 id="productTitle">
-                <span id="productName">{data.title}</span>
-            </h1>
-            <div>{data.price}</div>
-            <div>
-                <button id="addToBasketButton">Add to Basket</button>
-            </div>
+            <h1>Nike</h1>
+            {/* <h2>{name}</h2>
+            <div>£{price.current}</div>
+            <ul> 
+                { images.map(({ identifier }) => {
+                    let imageUrl = `${ampImagePath}${identifier}${ampSmallImageTemplate}`
+                    console.log(imageUrl)
+                    return (
+                        <li key={identifier}>
+                            <img src={imageUrl} alt="picture of awesome sofa" />
+                        </li>
+                    )
+                })}
+            </ul> */}
         </div>
     )
 }
