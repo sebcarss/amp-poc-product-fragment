@@ -50,14 +50,16 @@ export async function getServerSideProps({ params }) {
         }
     }
 
+    // TODO Get layout for subcategory < category < department < default(?)
+
     // Get category from product data
-    let productCategory = 'default'
-    if (product.data.attributes.brand.name === 'Nike') {
-        productCategory = 'nike-trainers'
-    } else {
-        productCategory = 'sofa'
-    }
-    const category = productCategory;
+    var category = product.data.attributes.navigation.category
+    var brand = product.data.attributes.brand.name
+
+    // TODO Define rules for differentiating layouts for products (logic vs CMS)
+    if (brand === 'Nike' && category === 'mens_trainers') {
+        category = 'nike-trainers'
+    } 
     console.log(category);
 
     // Fetch PDP Config and Layout from Amplience
