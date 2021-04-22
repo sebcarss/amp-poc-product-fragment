@@ -13,12 +13,12 @@ export default function Product({ product, pdpconfig }) {
     }
 
     const { content: { config } } = pdpconfig
-    const { content: { layout : { layout } } } = pdpconfig
+    const { content: { layout: { layout } } } = pdpconfig
     console.log(layout)
-    
+
     // TODO Populate new layout object based off the Amplience PDP Config and PDP Layout 
     // and use it to store the JSX version of the layout to be rendered in the return
-    
+
     // {
     //     children: [
     //         { name: 'product_price' },
@@ -26,21 +26,49 @@ export default function Product({ product, pdpconfig }) {
     //         { name: 'product_image' }
     //     ]
     // }
-      
 
-    // Get fullWidthImage config from Amplience PDP Config content
-    var imageLayout
-    if (config.fullWidthImage) {
-        imageLayout = <FullWidthImage product={product} />
-    } else {
-        imageLayout = <ImageGrid product={product} />
-    }
+    // var modules = [
+    //     {
+    //         "module": <Title product={product} />
+    //     }, 
+    //     {
+    //         "module": <Price product={product} />
+    //     }
+    // ]
+
+    // TODO Defer this to another class to deal with
+    var modules = []; // init empty array to add modules to
+
+    layout.children.map(({ name: layoutName }) => {
+        let moduleDOMObject;
+
+        // TODO Could this be a Map so we don't have to add if-then-else statements?
+        // No - as we would still need to import them all into this class
+        if (layoutName == 'product_price') {
+            moduleDOMObject = <Price product={product} />
+        } else if (layoutName == 'product_name') {
+            moduleDOMObject = <Title product={product} />
+        } else if (layoutName == 'product_image') {
+            // Get fullWidthImage config from Amplience PDP Config content
+            if (config.fullWidthImage) {
+                moduleDOMObject = <FullWidthImage product={product} />
+            } else {
+                moduleDOMObject = <ImageGrid product={product} />
+            }
+        }
+        modules.push({
+            "module": moduleDOMObject
+        })
+    })
 
     return (
         <div>
-            <Title product={product} />
-            <Price product={product} />
-            {imageLayout}
+            { modules.map(({ module }) => {
+                console.log(module)
+                return (
+                    <div>{module}</div>
+                )
+            })}
         </div>
     )
 }
@@ -71,7 +99,7 @@ export async function getServerSideProps({ params }) {
     // TODO Define rules for differentiating layouts for products (logic vs CMS)
     if (brand === 'Nike' && category === 'mens_trainers') {
         category = 'nike-trainers'
-    } 
+    }
     console.log(category);
 
     // Fetch PDP Config and Layout from Amplience
@@ -84,7 +112,7 @@ export async function getServerSideProps({ params }) {
             props: { product }
         }
     }
-    
+
     return {
         props: { product, pdpconfig } // will be passed to the page component as props
     }
